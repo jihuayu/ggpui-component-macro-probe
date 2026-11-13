@@ -1,0 +1,62 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+     Running `target\debug\probe-demo.exe`
+
+1. Initial mount
+  ReportPage
+  if detail = 0
+  cached preview = 0
+  status: idle
+  row 1: Sales / local=0
+  row 2: Inventory / local=0
+
+2. Change local state, without rebuilding ReportPage
+  ReportPage
+  if detail = 7
+  cached preview = 8
+  status: idle
+  row 1: Sales / local=9
+  row 2: Inventory / local=0
+
+3. Hide ordinary and cached branches
+  ReportPage
+  detail unmounted
+  status: idle
+  row 1: Sales / local=9
+  row 2: Inventory / local=0
+
+4. Reopen: ordinary=0, cached=8
+  ReportPage
+  if detail = 0
+  cached preview = 8
+  status: idle
+  row 1: Sales / local=9
+  row 2: Inventory / local=0
+
+5. Reorder + rename: local=9 follows report id=1
+  ReportPage
+  if detail = 0
+  cached preview = 8
+  status: idle
+  row 2: Inventory / local=0
+  row 1: Sales revised / local=9
+
+6. Command -> Store -> match Ready arm
+  ReportPage
+  if detail = 0
+  cached preview = 8
+  status: First
+  row 2: Inventory / local=0
+  row 1: Sales revised / local=9
+
+7. Same Ready arm, new name (not a stale snapshot)
+  ReportPage
+  if detail = 0
+  cached preview = 8
+  status: Second
+  row 2: Inventory / local=0
+  row 1: Sales revised / local=9
+
+8. Duplicate key rejected; previous list preserved
+
+Component mount counts: {"Details": 2, "Preview": 1, "ReportPage": 1, "ReportRow": 2}
+PASS: reactive control flow, keys, state lifetimes, Store/Command injection

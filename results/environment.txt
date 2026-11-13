@@ -1,0 +1,6 @@
+Verification time: 2026-11-13T15:42:59.3185475+08:00
+Cargo executable: D:\RustCache\.rustup\toolchains\stable-x86_64-pc-windows-msvc\bin\cargo.exe
+Target directory: D:\oss\ggpui-component-macro-probe\target
+rustc 1.93.1 (01f6ddf75 2026-02-11)
+cargo 1.93.1 (083ac5135 2025-12-15)
+Offline: True

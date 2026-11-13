@@ -1,0 +1,28 @@
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running `target\debug\examples\patterns.exe`
+
+1. let chain + native match selection
+  user=Ada, quota=10
+  progress=1/2, local=0
+
+2. local update does not rerun parent selector
+  user=Ada, quota=10
+  progress=1/2, local=9
+
+3. Command -> Store -> same or-pattern arm, one tuple publication
+  user=Ada, quota=10
+  progress=3/6, local=9
+
+4. owned @ + nested range/or pattern; progress is cached
+  user=Ada, quota=10
+  accepted code=5, tagged=true
+
+5. short circuit falls back; cache resumes latest payload and local=9
+  guest or quota unavailable
+  progress=4/8, local=9
+
+6. fallback
+  guest or quota unavailable
+  idle or invalid
+
+PASS: if let, let chains, @, or-patterns, unified payload, Store/Command, cache

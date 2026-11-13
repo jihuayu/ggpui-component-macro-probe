@@ -1,0 +1,22 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
+     Running tests\diagnostics.rs (target\debug\deps\diagnostics-b406aa925190bfb4.exe)
+
+running 1 test
+PASS diagnostic: at_partial_move.rs
+PASS diagnostic: bare_constant.rs
+PASS diagnostic: borrowed_temporary.rs
+PASS diagnostic: chain_else_scope.rs
+PASS diagnostic: chain_non_bool.rs
+PASS diagnostic: chain_or.rs
+PASS diagnostic: component_options.rs
+PASS diagnostic: mut_binding.rs
+PASS diagnostic: non_exhaustive.rs
+PASS diagnostic: or_different_types.rs
+PASS diagnostic: or_missing_binding.rs
+PASS diagnostic: pattern_macro.rs
+PASS diagnostic: ref_binding.rs
+PASS: 13 diagnostic fixtures
+test invalid_programs_have_the_expected_diagnostic ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.82s
+

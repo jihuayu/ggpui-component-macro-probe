@@ -1,0 +1,126 @@
+[
+  {
+    "path": "Cargo.toml",
+    "sha256": "39ec67d488d766138a6ae55440986bd39f35a0c40da324197096e38e30264365"
+  },
+  {
+    "path": "Cargo.lock",
+    "sha256": "51bcdd9b003ed96e1a89540446da2de19988449771dc6ea04257114bec1b9aaa"
+  },
+  {
+    "path": ".gitignore",
+    "sha256": "32612892f1c9e15fe772b8034945f8072b83e025153aef597e45d5eccbe98c43"
+  },
+  {
+    "path": "verify.ps1",
+    "sha256": "98e9480a4175cfeb7c0210ddfaeb8ff8eb3697d11a393f8664963f91a82263b3"
+  },
+  {
+    "path": "README.md",
+    "sha256": "6e2541b4072c5d07b3056a0282bc05311f085fb7e7cafa1846d1c95e6b928774"
+  },
+  {
+    "path": "MECHANISM.md",
+    "sha256": "66d5d768e6550f1525698eccee6eafdf254dfaf04d10fba5861f6e889660b1de"
+  },
+  {
+    "path": "macros/Cargo.toml",
+    "sha256": "e95fcadf4188cdc9e7d81c563ee490fe6189abe791be12b1c87ce9fc183ef693"
+  },
+  {
+    "path": "macros/src/lib.rs",
+    "sha256": "8a28bf4513c649f90047ad2177a32dcf289d8b3a18d320d41d34bfcb6c164c56"
+  },
+  {
+    "path": "runtime/Cargo.toml",
+    "sha256": "0ec9ab2d8cffc45ed084c7fcf04a848e405bc29859543b7da462b50dcf4eacf3"
+  },
+  {
+    "path": "runtime/compile_fail.md",
+    "sha256": "2eb4a767800e3b9ab7bd0560d45662669468e427d8c89498b988c7a41444d236"
+  },
+  {
+    "path": "runtime/src/lib.rs",
+    "sha256": "2e41d530fef6fafc85abd732f417e4feef5bc1751c5e6ec58189221b12905f36"
+  },
+  {
+    "path": "runtime/tests/behavior.rs",
+    "sha256": "f19c98bd81dc622433a7f055cb93786f637484049b4184781852521b9db614d9"
+  },
+  {
+    "path": "runtime/tests/diagnostics.rs",
+    "sha256": "f88c77b90e173e06687ac45f91c8172a074e52d4eabbd4c6f76355f8f5cf04b1"
+  },
+  {
+    "path": "runtime/tests/layout.rs",
+    "sha256": "4adfe281b23748c7eaaef7be5f3bb5637039091490ba8172b7bd520e1e6d754d"
+  },
+  {
+    "path": "runtime/tests/patterns.rs",
+    "sha256": "7517c45097d377b7b2556b7b9605d778b341ebd5b22a1f3aa2ed3f9f3006b16f"
+  },
+  {
+    "path": "runtime/tests/ui/at_partial_move.rs",
+    "sha256": "d7cbe3aff478dad5e3a9c664f94abfd78be73251baa366d92d0f9c19f07dbe0d"
+  },
+  {
+    "path": "runtime/tests/ui/bare_constant.rs",
+    "sha256": "6c08cb095c03bbaca35e64eab5f8c0791c332e32c2adf8b662d4afa8deffdc01"
+  },
+  {
+    "path": "runtime/tests/ui/borrowed_temporary.rs",
+    "sha256": "c84eb27c867c5d659ad92298c0915981d9f209b4764daa2854d810d2c84c4df5"
+  },
+  {
+    "path": "runtime/tests/ui/chain_else_scope.rs",
+    "sha256": "d5f90b906f1fafa71629be652153f8ca494688e41a547ebf3cd32cd69e64f78a"
+  },
+  {
+    "path": "runtime/tests/ui/chain_non_bool.rs",
+    "sha256": "5ed797c343d802a2fc735f8f5a544b4642a68d11d4570a2dcfeebab0268051a4"
+  },
+  {
+    "path": "runtime/tests/ui/chain_or.rs",
+    "sha256": "2305a908180bfca09981f62084546796482c9d3154e208f85e87102407a52ee7"
+  },
+  {
+    "path": "runtime/tests/ui/component_options.rs",
+    "sha256": "033251ddeea0b1b0b69940843ba11850185c25f664027e06a42fcb1f88e5377c"
+  },
+  {
+    "path": "runtime/tests/ui/mut_binding.rs",
+    "sha256": "eeba1a4663a3f821be11dad429691f53cc1ec8776853a5987c17baf4e21d1202"
+  },
+  {
+    "path": "runtime/tests/ui/non_exhaustive.rs",
+    "sha256": "819ecaf1c7aee9f3ab0165fd7e0aff341c5fd5b42b24b3dec8d89582ed208308"
+  },
+  {
+    "path": "runtime/tests/ui/or_different_types.rs",
+    "sha256": "69252dfbbdeca04eea54203609189a06048c5d55d3087972329955997728f0a8"
+  },
+  {
+    "path": "runtime/tests/ui/or_missing_binding.rs",
+    "sha256": "f7b09c8f49c60105370d819db3b8c32d7979410a066653c2153a504931929bcc"
+  },
+  {
+    "path": "runtime/tests/ui/pattern_macro.rs",
+    "sha256": "87c5cbb386a0f346853f26c1bb03a6da89e8c1cdd0fb54046e8bf87e59e740c8"
+  },
+  {
+    "path": "runtime/tests/ui/ref_binding.rs",
+    "sha256": "f828e6d2ffe716513fdabc2f751845a652276d5ce848b4a01b11e444bcc68224"
+  },
+  {
+    "path": "demo/Cargo.toml",
+    "sha256": "090f20e24a585539cabcf465b2aaf777d54c93da1cab31af5750a4421d658e55"
+  },
+  {
+    "path": "demo/examples/patterns.rs",
+    "sha256": "0b9f11a021d6d8a48da97ecd3afea19fccffb2f9696dfe4ced4f612320f7484b"
+  },
+  {
+    "path": "demo/src/main.rs",
+    "sha256": "c44f7ca6083487e6d010bba29a71a2bd048c06609c0a8483d2f49b80ec692097"
+  }
+]

@@ -1,0 +1,14 @@
+[workspace]
+members = ["macros", "runtime", "demo"]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.88"
+publish = false
+
+[workspace.dependencies]
+syn = { version = "2", features = ["full", "visit"] }
+quote = "1"
+proc-macro2 = "1"
+
