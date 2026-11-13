@@ -12,7 +12,7 @@
 
 ## 浏览器 Canvas example
 
-`web` crate 是一个独立的 Rust/WASM Canvas 适配示例。它把三个 `Signal<bool>` 接到持久 Taffy 布局叶节点，点击卡片后只重跑对应的 layout watcher；Canvas 适配层随后重绘画布，并在画面底部显示 Signal 写入、布局 watcher 和 relayout 计数。卡片底部同时显示稳定的逻辑 `LayoutNodeId` 与 Taffy `NodeId`。
+`web` crate 是一个独立的 Rust/WASM Canvas 适配示例。它把一个 Flex parent 和三个子节点接到 Signal 驱动的持久 Taffy 布局叶节点，点击 child、parent 或缩放按钮后只重跑相关 layout watcher；更新节点会短暂变成橙色，Canvas 适配层随后重绘画布，并在画面底部显示 Signal 写入、布局 watcher、relayout 和当前闪烁节点计数。节点底部同时显示稳定的逻辑 `LayoutNodeId` 与 Taffy `NodeId`。
 
 从仓库根目录构建并启动静态服务器：
 
@@ -26,7 +26,7 @@ wasm-bindgen target/wasm32-unknown-unknown/release/probe_web.wasm `
 python -m http.server 8080 --directory web
 ```
 
-打开 <http://127.0.0.1:8080/>，点击任意卡片即可观察局部布局更新。先安装一次与 `Cargo.lock` 对齐的 `wasm-bindgen-cli`：
+打开 <http://127.0.0.1:8080/>，点击 child、parent 标题或 `− / +` 缩放控件即可观察父子 Flex 联动和局部更新提示。先安装一次与 `Cargo.lock` 对齐的 `wasm-bindgen-cli`：
 
 ```powershell
 cargo install wasm-bindgen-cli --version 0.2.130

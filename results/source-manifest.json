@@ -13,15 +13,15 @@
   },
   {
     "path": "verify.ps1",
-    "sha256": "08fbcde9991f0e6660e7794170871df6b418fa7a88a5a50a2fe2b852744d28f3"
+    "sha256": "98c01ce5e22dc0946227e42145631fd415ab8ed0c7ea9f303a6bb1d253329fe6"
   },
   {
     "path": "README.md",
-    "sha256": "9136b9dafbd7d0cb7a68168e9602a7b4323dc20bab5b304bf8540005e00a1001"
+    "sha256": "ab66f950be9a618c4cbb44d4c914048e7999aba01c33c3e4939d577a4597f9d3"
   },
   {
     "path": "MECHANISM.md",
-    "sha256": "f96ae2aadd78db85d7d9d721f1c22e869d715bb67b2eb764bc011620d8983d01"
+    "sha256": "97bc2d524d3ebb1484481872e774bbdf5aa6bf7951d0f6c631516b1a0e823fca"
   },
   {
     "path": ".github/workflows/ci.yml",
@@ -129,18 +129,18 @@
   },
   {
     "path": "web/Cargo.toml",
-    "sha256": "b05f1c22cf34feb57212447c11d43a4fc5f6adba8fde5a1d36687267a815ebb0"
+    "sha256": "88c85ff4a74ee57834d06a193a4be0b83cba8f057f575bcac6e29d7df61e75e0"
   },
   {
     "path": "web/index.html",
-    "sha256": "1a5e689b3aab36670dc814386c779292fb6edd14d411ed08492812a63595a359"
+    "sha256": "4a2e4d43654e633af2edb65059fccd3a8c4db0e5cb46f213efaf184f3da4f16c"
   },
   {
     "path": "web/README.md",
-    "sha256": "80187186a99cd691e6d2bf81cb3dac1495843004e9680f279c6a5d69d490eba8"
+    "sha256": "d13cccd95d44f5b260a527e64f8f0d8bdb0042db5bd59b5cc36784c6e560dff1"
   },
   {
     "path": "web/src/lib.rs",
-    "sha256": "72e5f8afe5439df0fcb01028436d8b06755ab6d31987bc4ad4b87b7de81b86cb"
+    "sha256": "3063594818bcdd8cec3d72649b765b503c3704a684c68bd0f31053f032917c50"
   }
 ]

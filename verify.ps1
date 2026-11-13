@@ -48,7 +48,9 @@ try {
     $files = @('Cargo.toml', 'Cargo.lock', '.gitignore', 'verify.ps1', 'README.md', 'MECHANISM.md')
     $files += @(Get-ChildItem -LiteralPath '.github' -Recurse -File |
         ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
+    $generatedWeb = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot 'web/pkg'))
     $files += @(Get-ChildItem -LiteralPath 'macros','runtime','demo','web' -Recurse -File |
+        Where-Object { -not $_.FullName.StartsWith($generatedWeb + [IO.Path]::DirectorySeparatorChar) } |
         ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
     $manifest = foreach ($file in $files) {
         [pscustomobject]@{
