@@ -18,7 +18,7 @@ fn find_library(root: &std::path::Path) -> Option<PathBuf> {
                 .and_then(|parent| parent.file_name())
                 .is_some_and(|name| name == "deps")
                 && name.starts_with("libprobe_ui-")
-                && name.ends_with(".rlib")
+                && (name.ends_with(".rlib") || name.ends_with(".rmeta"))
             {
                 return Some(path);
             }
