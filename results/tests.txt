@@ -1,4 +1,5 @@
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.13s
+   Compiling probe-ui v0.1.0 (D:\oss\ggpui-component-macro-probe\runtime)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
      Running unittests src\main.rs (target\debug\deps\probe_demo-d25497af4f29dd28.exe)
 
 running 0 tests
@@ -20,90 +21,90 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
      Running tests\behavior.rs (target\debug\deps\behavior-ceb4104ad4ff7405.exe)
 
 running 26 tests
-test equal_writes_do_not_schedule_work ... ok
 test component_is_initialized_once_and_local_changes_only_update_text ... ok
 test batched_flip_to_original_value_does_not_remount ... ok
-test keep_alive_preserves_state_and_parent_unmount_disposes_it ... ok
 test dynamic_dependencies_are_unsubscribed_when_no_longer_read ... ok
+test if_disposes_and_remounts_fresh_state_and_rejects_stale_handle ... ok
+test equal_writes_do_not_schedule_work ... ok
+test match_guards_are_reactive_and_use_snapshot_bindings ... ok
+test hooks_outside_component_initialization_are_rejected ... ok
 test filtering_and_reinserting_the_same_key_resets_state ... ok
 test changing_key_remounts_but_other_rows_are_untouched ... ok
+test hidden_cached_scope_does_not_recompute_and_refreshes_latest_data_on_resume ... ok
+test keep_alive_preserves_state_and_parent_unmount_disposes_it ... ok
 test cache_capacity_evicts_oldest_inactive_arm ... ok
 test duplicate_keys_reject_the_whole_list_before_any_changes ... ok
-test if_disposes_and_remounts_fresh_state_and_rejects_stale_handle ... ok
-test hooks_outside_component_initialization_are_rejected ... ok
 test keyed_reorder_and_same_key_new_data_keep_row_state ... ok
-test hidden_cached_scope_does_not_recompute_and_refreshes_latest_data_on_resume ... ok
-test match_guards_are_reactive_and_use_snapshot_bindings ... ok
-test match_change_arm_disposes_payload_watchers_before_they_evaluate ... ok
 test match_same_arm_updates_payload_without_remounting ... ok
+test match_change_arm_disposes_payload_watchers_before_they_evaluate ... ok
 test mutation_in_tracked_condition_is_rejected ... ok
 test panic_restores_current_scope_and_cleans_failed_mount ... ok
 test moving_same_key_between_lists_creates_new_instance ... ok
 test plain_rust_snapshot_stays_fixed_while_view_and_memo_are_reactive ... ok
-test reactivating_parent_does_not_activate_a_hidden_cached_grandchild ... ok
 test two_siblings_have_independent_state ... ok
+test reactivating_parent_does_not_activate_a_hidden_cached_grandchild ... ok
 test separate_app_providers_and_state_do_not_mix ... ok
 test use_store_and_typed_command_update_bindings_without_rebuilding_component ... ok
 test unflushed_remove_and_reinsert_uses_final_key_set ... ok
 test many_mount_unmount_cycles_release_scopes_signals_and_watchers ... ok
 
-test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
      Running tests\diagnostics.rs (target\debug\deps\diagnostics-abdb44dd7a01338b.exe)
 
 running 1 test
 test invalid_programs_have_the_expected_diagnostic ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.41s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.48s
 
      Running tests\layout.rs (target\debug\deps\layout-9d28c5f9d5b8e124.exe)
 
 running 3 tests
 test explicit_relayout_reruns_layout_without_signal_writes ... ok
-test disposed_layout_is_removed_from_results_and_signal_dependents ... ok
 test signal_location_reports_scope_and_layout_dependents ... ok
+test disposed_layout_is_removed_from_results_and_signal_dependents ... ok
 
 test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
 
      Running tests\patterns.rs (target\debug\deps\patterns-dc91883a9ce0cf96.exe)
 
 running 34 tests
+test chain_shadowing_exports_the_final_binding ... ok
+test guard_order_and_first_success_follow_rust_match_semantics ... ok
 test generated_payload_parameter_does_not_capture_user_identifier ... ok
 test explicit_reference_pattern_can_copy_an_owned_payload ... ok
-test chain_shadowing_exports_the_final_binding ... ok
-test child_local_updates_do_not_resubscribe_or_rerun_parent_selection ... ok
-test guard_order_and_first_success_follow_rust_match_semantics ... ok
-test cached_match_resumes_payload_and_state_after_variant_changed_while_hidden ... ok
-test cached_if_let_resumes_latest_payload_with_previous_local_state ... ok
 test bare_unit_variant_is_not_mistaken_for_payload ... ok
 test failed_new_branch_preparation_keeps_committed_branch_and_cleans_scratch_scope ... ok
+test cached_if_let_resumes_latest_payload_with_previous_local_state ... ok
+test child_local_updates_do_not_resubscribe_or_rerun_parent_selection ... ok
+test cached_match_resumes_payload_and_state_after_variant_changed_while_hidden ... ok
 test if_let_accepts_owned_at_binding ... ok
 test else_if_let_can_shadow_branch_bindings_and_reactivate_with_latest_value ... ok
-test if_let_without_else_retains_an_empty_region ... ok
 test if_let_accepts_top_level_or_patterns ... ok
-test if_let_chain_evaluates_once_and_updates_all_fields_before_child_observation ... ok
-test if_let_updates_owned_payload_and_preserves_state_until_pattern_fails ... ok
 test if_let_batched_failure_and_recovery_retains_committed_instance ... ok
+test if_let_chain_evaluates_once_and_updates_all_fields_before_child_observation ... ok
+test if_let_without_else_retains_an_empty_region ... ok
+test if_let_updates_owned_payload_and_preserves_state_until_pattern_fails ... ok
 test implicit_format_capture_reads_current_payload ... ok
-test let_chains_support_boolean_prefixes_multiple_bindings_and_payload_updates ... ok
 test let_chains_short_circuit_and_drop_unreachable_dependencies ... ok
-test match_evaluates_source_and_guard_once_then_publishes_consistent_payload ... ok
+test let_chains_support_boolean_prefixes_multiple_bindings_and_payload_updates ... ok
 test multiple_let_payloads_are_published_before_child_memo ... ok
-test nested_match_sees_latest_if_let_payload_without_remounting_parent ... ok
-test or_pattern_variants_share_one_arm_and_local_state ... ok
+test match_evaluates_source_and_guard_once_then_publishes_consistent_payload ... ok
 test overlapping_or_pattern_retries_guard_exactly_as_native_rust_does ... ok
+test or_pattern_variants_share_one_arm_and_local_state ... ok
+test nested_match_sees_latest_if_let_payload_without_remounting_parent ... ok
 test owned_array_and_rest_pattern_are_supported ... ok
 test owned_at_binding_nested_range_and_or_pattern_update_together ... ok
-test qualified_constants_remain_constant_patterns ... ok
-test pattern_payload_updates_through_keyed_children ... ok
-test raw_identifiers_remain_valid_reactive_bindings ... ok
-test unreferenced_bare_constant_remains_a_pattern ... ok
 test panic_while_preparing_new_branch_cleans_scope_and_preserves_old_output ... ok
-test whole_owned_vector_binding_retains_ownership ... ok
+test pattern_payload_updates_through_keyed_children ... ok
+test qualified_constants_remain_constant_patterns ... ok
+test raw_identifiers_remain_valid_reactive_bindings ... ok
 test payload_has_no_flat_tuple_twelve_binding_limit ... ok
+test unreferenced_bare_constant_remains_a_pattern ... ok
+test whole_owned_vector_binding_retains_ownership ... ok
 test repeated_if_let_failure_and_reentry_do_not_grow_live_resources ... ok
 
-test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
 
    Doc-tests probe_macros
 
@@ -115,15 +116,15 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
 running 10 tests
 test runtime\src\lib.rs - (line 32) - compile fail ... ok
-test runtime\src\lib.rs - (line 43) - compile fail ... ok
 test runtime\src\lib.rs - (line 54) - compile fail ... ok
-test runtime\src\lib.rs - (line 105) - compile fail ... ok
-test runtime\src\lib.rs - (line 21) - compile fail ... ok
+test runtime\src\lib.rs - (line 43) - compile fail ... ok
 test runtime\src\lib.rs - (line 10) - compile fail ... ok
+test runtime\src\lib.rs - (line 105) - compile fail ... ok
 test runtime\src\lib.rs - (line 69) - compile fail ... ok
 test runtime\src\lib.rs - (line 62) - compile fail ... ok
-test runtime\src\lib.rs - (line 78) - compile fail ... ok
+test runtime\src\lib.rs - (line 21) - compile fail ... ok
 test runtime\src\lib.rs - (line 94) - compile fail ... ok
+test runtime\src\lib.rs - (line 78) - compile fail ... ok
 
-test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.17s
 

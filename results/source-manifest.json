@@ -25,7 +25,7 @@
   },
   {
     "path": ".github/workflows/ci.yml",
-    "sha256": "ae75c53d2bd78a4147871cf3a89091e6b1e3c2468c953655411fbbd5bbc7bcec"
+    "sha256": "30bfad946e6a21d41f5d76eaa7aee26eada8dfb4267dd471c02551593ecc78d6"
   },
   {
     "path": "macros/Cargo.toml",
@@ -53,7 +53,7 @@
   },
   {
     "path": "runtime/tests/diagnostics.rs",
-    "sha256": "f88c77b90e173e06687ac45f91c8172a074e52d4eabbd4c6f76355f8f5cf04b1"
+    "sha256": "de6bd76c444a408892694bc02b52664d2c71ed07426e1080a78822330226a76e"
   },
   {
     "path": "runtime/tests/layout.rs",
