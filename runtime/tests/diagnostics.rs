@@ -2,25 +2,31 @@
 //! No snapshot library or network access is needed. rustc writes only to target/.
 use std::{fs, path::PathBuf, process::Command};
 
-fn find_library(root: &std::path::Path) -> Option<PathBuf> {
+fn find_libraries(root: &std::path::Path) -> Vec<PathBuf> {
     let mut pending = vec![root.to_owned()];
+    let mut found = Vec::new();
     while let Some(directory) = pending.pop() {
-        let entries = fs::read_dir(directory).ok()?;
+        let Ok(entries) = fs::read_dir(directory) else {
+            continue;
+        };
         for entry in entries.flatten() {
             let path = entry.path();
             if path.is_dir() {
                 pending.push(path);
                 continue;
             }
-            let name = path.file_name()?.to_string_lossy();
+            let Some(file_name) = path.file_name() else {
+                continue;
+            };
+            let name = file_name.to_string_lossy();
             if (name.starts_with("libprobe_ui-") || name.starts_with("probe_ui-"))
                 && (name.ends_with(".rlib") || name.ends_with(".rmeta"))
             {
-                return Some(path);
+                found.push(path);
             }
         }
     }
-    None
+    found
 }
 
 #[test]
@@ -36,10 +42,27 @@ fn invalid_programs_have_the_expected_diagnostic() {
         .find(|path| path.file_name().is_some_and(|name| name == "target"))
         .map(PathBuf::from)
         .unwrap_or_else(|| deps.clone());
-    let library =
-        find_library(&target).expect("Cargo must build probe-ui before its integration tests");
-    let dependency_dir = library.parent().expect("probe-ui library directory");
-    let output = dependency_dir.parent().unwrap().join("pattern-diagnostics");
+    let mut libraries = find_libraries(&target);
+    libraries.sort_by_key(|path| {
+        (
+            !path
+                .extension()
+                .is_some_and(|extension| extension == "rlib"),
+            path.clone(),
+        )
+    });
+    let library = libraries
+        .first()
+        .cloned()
+        .expect("Cargo must build probe-ui before its integration tests");
+    let mut dependency_dirs: Vec<_> = libraries
+        .iter()
+        .filter_map(|path| path.parent().map(PathBuf::from))
+        .collect();
+    dependency_dirs.push(target.join("debug").join("deps"));
+    dependency_dirs.sort();
+    dependency_dirs.dedup();
+    let output = target.join("pattern-diagnostics");
     fs::create_dir_all(&output).unwrap();
     let fixtures = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/ui");
     let mut cases: Vec<_> = fs::read_dir(fixtures)
@@ -68,8 +91,12 @@ fn invalid_programs_have_the_expected_diagnostic() {
             .args(["--edition=2024", "--crate-type=lib", "--emit=metadata"])
             .arg("--extern")
             .arg(format!("probe_ui={}", library.display()))
-            .arg("-L")
-            .arg(format!("dependency={}", dependency_dir.display()))
+            .args(dependency_dirs.iter().flat_map(|directory| {
+                [
+                    "-L".to_owned(),
+                    format!("dependency={}", directory.display()),
+                ]
+            }))
             .arg("--out-dir")
             .arg(&output)
             .env("CARGO_MANIFEST_DIR", env!("CARGO_MANIFEST_DIR"))
