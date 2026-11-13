@@ -49,9 +49,7 @@ fn invalid_programs_have_the_expected_diagnostic() {
     let mut libraries = find_libraries(&target);
     libraries.sort_by_key(|path| {
         (
-            !path
-                .extension()
-                .is_some_and(|extension| extension == "rlib"),
+            path.extension().is_none_or(|extension| extension != "rlib"),
             path.clone(),
         )
     });
