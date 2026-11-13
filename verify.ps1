@@ -43,6 +43,8 @@ try {
     Invoke-ProbeStep -Name 'diagnostics' -CargoArguments ($diagnosticsArguments + @('--', '--nocapture'))
 
     $files = @('Cargo.toml', 'Cargo.lock', '.gitignore', 'verify.ps1', 'README.md', 'MECHANISM.md')
+    $files += @(Get-ChildItem -LiteralPath '.github' -Recurse -File |
+        ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
     $files += @(Get-ChildItem -LiteralPath 'macros','runtime','demo' -Recurse -File |
         ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
     $manifest = foreach ($file in $files) {

@@ -11,6 +11,7 @@ use std::{
     marker::PhantomData,
     rc::{Rc, Weak},
 };
+use taffy::prelude::{AvailableSpace, Dimension, Size as TaffySize, Style, TaffyTree};
 
 type Id = u64;
 pub type Factory = Rc<dyn Fn() -> View>;
@@ -26,6 +27,7 @@ pub enum Error {
     AlreadyMounted,
     NonConvergent,
     PayloadTypeMismatch,
+    Layout(String),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -66,6 +68,7 @@ pub struct Rect {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct LayoutResult {
     pub node: LayoutNodeId,
+    pub taffy_node: u64,
     pub label: &'static str,
     pub rect: Rect,
 }
@@ -158,6 +161,12 @@ struct Watcher {
     layout_node: Option<LayoutNodeId>,
     label: Option<&'static str>,
 }
+struct LayoutRecord {
+    scope: Id,
+    label: &'static str,
+    node: taffy::NodeId,
+    rect: Rc<RefCell<Rect>>,
+}
 #[derive(Default, Debug, Clone)]
 pub struct Stats {
     pub mounts: BTreeMap<String, usize>,
@@ -181,7 +190,8 @@ struct Inner {
     commands: HashMap<TypeId, Box<dyn Any>>,
     stats: Stats,
     root: Option<(Id, Mounted)>,
-    layout: BTreeMap<LayoutNodeId, (Id, &'static str, Rc<RefCell<Rect>>)>,
+    layout: BTreeMap<LayoutNodeId, LayoutRecord>,
+    taffy: TaffyTree<()>,
 }
 impl Inner {
     fn id(&mut self) -> Id {
@@ -229,6 +239,7 @@ impl Engine {
             stats: Stats::default(),
             root: None,
             layout: BTreeMap::new(),
+            taffy: TaffyTree::new(),
         }));
         RUNTIMES.with(|r| r.borrow_mut().insert(id, Rc::downgrade(&inner)));
         Self { id, inner }
@@ -364,10 +375,11 @@ impl Engine {
         inner
             .layout
             .iter()
-            .map(|(node, (_, label, rect))| LayoutResult {
+            .map(|(node, record)| LayoutResult {
                 node: *node,
-                label,
-                rect: *rect.borrow(),
+                taffy_node: record.node.into(),
+                label: record.label,
+                rect: *record.rect.borrow(),
             })
             .collect()
     }
@@ -714,7 +726,16 @@ fn dispose(host: &Host, scope: Id) {
                 parent.children.remove(&scope);
             }
             inner.values.retain(|_, value| value.owner != scope);
-            inner.layout.retain(|_, (owner, _, _)| *owner != scope);
+            let removed_nodes: Vec<_> = inner
+                .layout
+                .iter()
+                .filter(|(_, record)| record.scope == scope)
+                .map(|(_, record)| record.node)
+                .collect();
+            for node in removed_nodes {
+                let _ = inner.taffy.remove(node);
+            }
+            inner.layout.retain(|_, record| record.scope != scope);
             let watches: Vec<_> = inner
                 .watchers
                 .iter()
@@ -1091,30 +1112,80 @@ fn mount(view: View, host: &Host, parent: Id) -> Result<Mounted, Error> {
             let node = {
                 let mut inner = owner.borrow_mut();
                 let node = LayoutNodeId(inner.id());
+                let taffy_node = inner
+                    .taffy
+                    .new_leaf(Style {
+                        size: TaffySize {
+                            width: Dimension::length(0.0),
+                            height: Dimension::length(0.0),
+                        },
+                        ..Style::default()
+                    })
+                    .map_err(|error| Error::Layout(error.to_string()))?;
                 inner.layout.insert(
                     node,
-                    (parent, label, Rc::new(RefCell::new(Rect::default()))),
+                    LayoutRecord {
+                        scope: parent,
+                        label,
+                        node: taffy_node,
+                        rect: Rc::new(RefCell::new(Rect::default())),
+                    },
                 );
                 inner.stats.layout_nodes += 1;
-                node
+                (node, taffy_node)
             };
             let (initial, deps) = evaluate(host, parent, || source());
-            owner
-                .borrow()
-                .layout
-                .get(&node)
-                .expect("layout node invariant")
-                .2
-                .replace(initial);
-            let rect = owner.borrow().layout[&node].2.clone();
+            let (node, taffy_node) = node;
+            let rect = owner.borrow().layout[&node].rect.clone();
+            let update_layout =
+                Rc::new(move |inner: &mut Inner, value: Rect| -> Result<(), Error> {
+                    inner
+                        .taffy
+                        .set_style(
+                            taffy_node,
+                            Style {
+                                size: TaffySize {
+                                    width: Dimension::length(value.width),
+                                    height: Dimension::length(value.height),
+                                },
+                                ..Style::default()
+                            },
+                        )
+                        .map_err(|error| Error::Layout(error.to_string()))?;
+                    inner
+                        .taffy
+                        .compute_layout(
+                            taffy_node,
+                            TaffySize {
+                                width: AvailableSpace::Definite(value.width),
+                                height: AvailableSpace::Definite(value.height),
+                            },
+                        )
+                        .map_err(|error| Error::Layout(error.to_string()))?;
+                    let layout = *inner
+                        .taffy
+                        .layout(taffy_node)
+                        .map_err(|error| Error::Layout(error.to_string()))?;
+                    rect.replace(Rect {
+                        x: layout.location.x + value.x,
+                        y: layout.location.y + value.y,
+                        width: layout.size.width,
+                        height: layout.size.height,
+                    });
+                    Ok(())
+                });
+            update_layout(&mut owner.borrow_mut(), initial)?;
             let source_for_watch = source.clone();
+            let update_layout_for_watch = update_layout.clone();
+            let layout_host = host.clone();
             watch_with_meta(
                 host,
                 parent,
                 deps,
                 Rc::new(move || {
-                    rect.replace(source_for_watch());
-                    Ok(())
+                    let value = source_for_watch();
+                    let inner = layout_host.inner();
+                    update_layout_for_watch(&mut inner.borrow_mut(), value)
                 }),
                 WatcherKind::Layout,
                 Some(node),

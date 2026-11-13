@@ -5,7 +5,7 @@
   },
   {
     "path": "Cargo.lock",
-    "sha256": "51bcdd9b003ed96e1a89540446da2de19988449771dc6ea04257114bec1b9aaa"
+    "sha256": "2a2dfc642f59e45842ab69b909f04e58afcc7b1aa6f168f3b041c99ddda8ad7f"
   },
   {
     "path": ".gitignore",
@@ -13,15 +13,19 @@
   },
   {
     "path": "verify.ps1",
-    "sha256": "98e9480a4175cfeb7c0210ddfaeb8ff8eb3697d11a393f8664963f91a82263b3"
+    "sha256": "672c7acf01a5cc2e3cc486b2ee82b697ef18c10024d3cd1ac03fed00352db5a5"
   },
   {
     "path": "README.md",
-    "sha256": "6e2541b4072c5d07b3056a0282bc05311f085fb7e7cafa1846d1c95e6b928774"
+    "sha256": "8b05e8a6b91de755059c448d68a7eddeafb31ccf54e2eb67d3a6534a52e0c48f"
   },
   {
     "path": "MECHANISM.md",
-    "sha256": "66d5d768e6550f1525698eccee6eafdf254dfaf04d10fba5861f6e889660b1de"
+    "sha256": "b6135e3f2bd2194825a9ed2b89594f9a7a7f20a12f1e902abf3d536e6d333f22"
+  },
+  {
+    "path": ".github/workflows/ci.yml",
+    "sha256": "ae75c53d2bd78a4147871cf3a89091e6b1e3c2468c953655411fbbd5bbc7bcec"
   },
   {
     "path": "macros/Cargo.toml",
@@ -33,7 +37,7 @@
   },
   {
     "path": "runtime/Cargo.toml",
-    "sha256": "0ec9ab2d8cffc45ed084c7fcf04a848e405bc29859543b7da462b50dcf4eacf3"
+    "sha256": "36a04de4e89a924060e3605e9cf58b0cfe6b815ae656bff33c0527ed2b8688fd"
   },
   {
     "path": "runtime/compile_fail.md",
@@ -41,7 +45,7 @@
   },
   {
     "path": "runtime/src/lib.rs",
-    "sha256": "2e41d530fef6fafc85abd732f417e4feef5bc1751c5e6ec58189221b12905f36"
+    "sha256": "4ce5ef5ae9b973b8f03643d4f30395f68256797dc790bff68374024ef44b3ed5"
   },
   {
     "path": "runtime/tests/behavior.rs",
@@ -53,7 +57,7 @@
   },
   {
     "path": "runtime/tests/layout.rs",
-    "sha256": "4adfe281b23748c7eaaef7be5f3bb5637039091490ba8172b7bd520e1e6d754d"
+    "sha256": "ad8c3e9d597bb505e7c7a9d914bd2dbd04a282798da3e5de4d356df64e0cd4b2"
   },
   {
     "path": "runtime/tests/patterns.rs",

@@ -79,9 +79,9 @@ if allowed.get()
 
 runtime 对每个 Signal 保留 owner scope。`Engine::locate(signal)` 返回 runtime id、signal id、owner scope 和组件名；`Engine::dependents(location)` 根据 watcher 当前依赖集合反查 reactive 或 layout watcher，并返回 watcher id、scope、kind、label 和可选 layout node。
 
-`View::layout(label, source)` 是一个无窗口的布局节点。挂载时先求值并记录 source 的 Signal 依赖，后续只在这些 Signal 变化时执行该节点的 relayout closure。`Engine::relayout()` 会把活动 layout watcher 标脏，用于窗口尺寸、字体度量等不由 Signal 表达的外部变化。`Engine::layout()` 返回节点 label、node id 和最新 `Rect`。显式 relayout 不会写 Signal，也不会重新挂载组件。
+`View::layout(label, source)` 是一个无窗口的布局节点。挂载时先求值并记录 source 的 Signal 依赖，后续只在这些 Signal 变化时执行该节点的 relayout closure。runtime 为每个逻辑布局节点保存稳定的 `LayoutNodeId` 与持久 Taffy 0.15 `NodeId`，更新时调用 `set_style` 和 `compute_layout`，再将 Taffy Layout 转回原型 Rect。`Engine::relayout()` 会把活动 layout watcher 标脏，用于窗口尺寸、字体度量等不由 Signal 表达的外部变化。`Engine::layout()` 返回节点 label、node id 和最新 `Rect`。显式 relayout 不会写 Signal，也不会重新挂载组件。
 
-这个原型的布局节点用 `Rect` 回调表示，未接入 Taffy、文本测量、真实树约束或 GPU。生产实现可把 `LayoutNodeId` 映射到持久 Taffy node，并把 `DependencyLocation` 扩展为 dirty reason、layout boundary 和 measure cache 命中信息。
+这个原型的布局节点用 `Rect` 回调驱动 Taffy leaf，已经验证持久节点和计算缓存的接入，但未接入 Taffy 父子树、文本测量、真实 measure callback 或 GPU。生产实现可把 `LayoutNodeId` 扩展为持久父子树，并把 `DependencyLocation` 扩展为 dirty reason、layout boundary 和 measure cache 命中信息。
 
 ## 生命周期和提交顺序
 
@@ -118,5 +118,6 @@ runtime 对每个 Signal 保留 owner scope。`Engine::locate(signal)` 返回 ru
 | 清理 | 200 次新增 if-let 循环 + 原有 300 次循环；错误/panic 构建回收 |
 | Rust 合法性 | 穷尽性、候选绑定一致性、移动/借用、chain 作用域及运算 |
 | 开发者入口 | `#[component]` / `view!` / `use_*` / Store / Command 的真实程序 |
+| 持久布局树 | `runtime/tests/layout.rs` 验证 Taffy 节点 id 在 Signal 更新后不变、卸载后从树移除；`.github/workflows/ci.yml` 验证 stable / 1.88 |
 
-使用 Rust 2024，声明 MSRV 1.88，实际执行工具链 1.93.1。依赖固定在本 workspace 的 Cargo.lock。没有真实窗口、布局、样式系统、异步 Command、跨线程 Store、渲染动画或 GPU 基准。正式接入 UI IR 与 GPUI 不在本轮修改范围内。
+使用 Rust 2024，声明 MSRV 1.88，实际执行工具链 1.93.1。依赖固定在本 workspace 的 Cargo.lock。没有真实窗口、完整父子布局树、样式系统、异步 Command、跨线程 Store、渲染动画或 GPU 基准。正式接入 UI IR 与 GPUI 不在本轮修改范围内。

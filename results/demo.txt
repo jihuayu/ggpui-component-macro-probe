@@ -1,4 +1,5 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.12s
+   Compiling probe-demo v0.1.0 (D:\oss\ggpui-component-macro-probe\demo)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.73s
      Running `target\debug\probe-demo.exe`
 
 1. Initial mount

@@ -7,4 +7,5 @@ publish.workspace = true
 
 [dependencies]
 probe-macros = { path = "../macros" }
+taffy = { version = "0.15", default-features = true }
 

@@ -1,4 +1,4 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.04s
      Running `target\debug\examples\patterns.exe`
 
 1. let chain + native match selection

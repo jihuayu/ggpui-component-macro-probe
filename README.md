@@ -6,7 +6,9 @@
 
 本轮已实现 `if let`、Rust 2024 let chains、合法的 owned `@` 和或模式，并将 `if` / `match` 统一为“一次原生选择 + 一个完整 payload 更新”。实现契约、展开流程与验收矩阵见 [MECHANISM.md](MECHANISM.md)。这里完成的是该独立原型的选择与生命周期机制，仍有明确的 Rust 语法与运行时边界。
 
-另外补上了 runtime 级的 Signal 定位和 headless relayout 原型。`Engine::locate(signal)` 返回 signal 所属 runtime、signal id、owner scope 和组件名；`Engine::dependents(location)` 返回当前依赖它的 reactive/layout watcher。`View::layout(label, || Rect { ... })` 会把读取到的 Signal 注册为布局依赖，Signal 更新只重跑相关布局 watcher，`Engine::relayout()` 用于窗口尺寸、字体度量等非 Signal 外部变化触发一次显式布局重跑。布局结果可由 `Engine::layout()` 读取。它验证的是依赖定位和局部重跑契约，不是 Taffy 或真实窗口布局引擎。
+另外补上了 runtime 级的 Signal 定位和 headless relayout 原型。`Engine::locate(signal)` 返回 signal 所属 runtime、signal id、owner scope 和组件名；`Engine::dependents(location)` 返回当前依赖它的 reactive/layout watcher。`View::layout(label, || Rect { ... })` 会把读取到的 Signal 注册为布局依赖，Signal 更新只重跑相关布局 watcher，`Engine::relayout()` 用于窗口尺寸、字体度量等非 Signal 外部变化触发一次显式布局重跑。布局结果可由 `Engine::layout()` 读取。它验证的是依赖定位、持久 Taffy leaf 和局部重跑契约，仍不是完整窗口布局引擎。
+
+当前 runtime 已接入持久的 Taffy 0.15 `TaffyTree<()>`。每个逻辑布局节点同时保存稳定的 `LayoutNodeId` 和 Taffy `NodeId`；Signal 更新会更新节点 style、执行 Taffy `compute_layout` 并回写 Rect，relayout 不会重新创建节点。卸载会从 Taffy 树移除节点。CI 位于 [.github/workflows/ci.yml](.github/workflows/ci.yml)，在 Linux 上运行 stable 与 Rust 1.88 两个工具链矩阵，并执行同一份 `verify.ps1 -Offline`。
 
 ## 运行
 
@@ -100,7 +102,7 @@ view! {
 | payload 一致性 | `(1, 2)` → `(3, 6)` 的子组件 memo 只观察这两个完整结果；多 let 也只发布完整元组；source 计数不随字段数增长 |
 | 列表 key | 排序保留状态；同 key 新数据更新；删除/过滤后恢复重建；跨列表不共享状态；重复 key 在修改该列表前整批拒绝 |
 | KeepAlive | 保留局部状态；隐藏期间不重算；恢复读取最新数据；LRU 条目限额；嵌套缓存不会误激活隐藏子分支 |
-| Signal 定位与布局 | `locate` 能定位 owner scope；`dependents` 能列出 layout watcher；相关 Signal 更新只重跑局部 layout；显式 `relayout` 不需要 Signal 写入；卸载后布局节点和依赖消失 |
+| Signal 定位与布局 | `locate` 能定位 owner scope；`dependents` 能列出 layout watcher；相关 Signal 更新只重跑局部 layout；稳定逻辑节点复用同一个 Taffy node；显式 `relayout` 不需要 Signal 写入；卸载后 Taffy 节点、布局结果和依赖消失 |
 | 卸载与异常 | 旧句柄拒绝读写；初次挂载及新分支准备 panic 清理；新分支准备报错保留原分支；原有 300 次循环及新增 200 次 if-let 进出后 live scope/signal/watcher 数量不增长 |
 | Rust 名字和嵌套 | `None`、限定常量、不被界面引用的裸常量、raw identifier、生成标识符卫生、隐式 format 捕获、嵌套 match、keyed 子树跟随 payload 更新 |
 | 编译约束 | 非穷尽 match、或模式缺绑定/类型冲突、非法 @ 部分移动、临时借用逃逸、ref/mut、非法链运算/作用域、模式宏、不支持的 component 选项等；诊断文件核对错误码或明确消息 |
@@ -118,7 +120,7 @@ Clippy 使用 `-D warnings`，代码禁止 unsafe。生成的组件包装、命�
 
 ## 实现边界
 
-- 支持 Text、Column/Row（无布局的逻辑分组）、命名组件 props、if/else/if-let/let chains、match/guard、owned @/或模式、带 key 的 for、KeepAlive(max_entries)。不支持样式链、真实事件控件、布局、图片、GPU 或动画；原设计文档的完整报告 UI 不能原样编译。`while`、`loop`、`let-else`、`?` 等可以用于普通 Rust 计算，不是本 DSL 的持久界面节点。
+- 支持 Text、Column/Row（无布局的逻辑分组）、`View::layout` headless 布局节点、命名组件 props、if/else/if-let/let chains、match/guard、owned @/或模式、带 key 的 for、KeepAlive(max_entries)。不支持样式链、真实事件控件、完整布局 DSL、图片、GPU 或动画；原设计文档的完整报告 UI 不能原样编译。`while`、`loop`、`let-else`、`?` 等可以用于普通 Rust 计算，不是本 DSL 的持久界面节点。
 - component 当前要求同步、非泛型自由函数，返回具体 View。view 命名组件参数使用 ReadProp；普通静态 props、完整属性链、跨模块路径、依赖重命名、属性转发等宏工程能力尚未覆盖。
 - 被界面引用的 payload 必须 Clone + PartialEq + 'static；支持合法 owned @，不自动克隆绕过 Rust 的 whole/field 部分移动规则。ref/mut 绑定明确拒绝，临时借用逃逸由 Rust 拒绝；显式引用模式提取 Copy 值可用。match 保留 Rust 穷尽性检查，不添加 wildcard。
 - 过程宏没有 Rust 名字解析信息。未被界面引用的 `None` / 裸常量保持原生模式；界面同时引用裸常量/无字段变体时应在模式和表达式里都写限定路径（如 `constants::FIRST` / `Option::None`）。当前不会对所有复杂名字遮蔽做作用域分析，且拒绝模式位置的嵌套宏；不能宣称支持任意 Rust 模式宏。格式字符串的隐式捕获已覆盖，跨宏定义引入的隐藏绑定不在保证内。

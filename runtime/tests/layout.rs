@@ -24,6 +24,8 @@ fn signal_location_reports_scope_and_layout_dependents() {
     assert_eq!(dependents[0].label, Some("panel"));
     assert!(dependents[0].layout_node.is_some());
 
+    let node = app.layout()[0].node;
+    let taffy_node = app.layout()[0].taffy_node;
     assert_eq!(app.layout()[0].rect.width, 100.0);
     let before = app.stats();
     assert_eq!(width.try_set(100.0), Ok(false));
@@ -32,6 +34,8 @@ fn signal_location_reports_scope_and_layout_dependents() {
 
     width.set(240.0);
     app.flush().unwrap();
+    assert_eq!(app.layout()[0].node, node);
+    assert_eq!(app.layout()[0].taffy_node, taffy_node);
     assert_eq!(app.layout()[0].rect.width, 240.0);
     assert_eq!(app.stats().relayout_runs, before.relayout_runs + 1);
     assert_eq!(app.stats().signal_writes, before.signal_writes + 1);

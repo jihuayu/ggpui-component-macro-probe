@@ -1,5 +1,5 @@
-    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.03s
-     Running tests\diagnostics.rs (target\debug\deps\diagnostics-b406aa925190bfb4.exe)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.04s
+     Running tests\diagnostics.rs (target\debug\deps\diagnostics-abdb44dd7a01338b.exe)
 
 running 1 test
 PASS diagnostic: at_partial_move.rs
@@ -18,5 +18,5 @@ PASS diagnostic: ref_binding.rs
 PASS: 13 diagnostic fixtures
 test invalid_programs_have_the_expected_diagnostic ... ok
 
-test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.82s
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.35s
 
