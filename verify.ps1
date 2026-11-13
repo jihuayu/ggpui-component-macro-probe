@@ -34,6 +34,9 @@ try {
     Invoke-ProbeStep -Name 'format' -CargoArguments @('fmt', '--all', '--', '--check')
     Invoke-ProbeStep -Name 'tests' -CargoArguments (@('test') + $common)
     Invoke-ProbeStep -Name 'clippy' -CargoArguments (@('clippy', '--all-targets') + $common + @('--', '-D', 'warnings'))
+    $wasmArguments = @('check', '-p', 'probe-web', '--target', 'wasm32-unknown-unknown', '--locked', '--target-dir', $probeTarget)
+    if ($Offline) { $wasmArguments += '--offline' }
+    Invoke-ProbeStep -Name 'web-wasm' -CargoArguments $wasmArguments
     $runArguments = @('run', '--locked', '--target-dir', $probeTarget, '-p', 'probe-demo')
     if ($Offline) { $runArguments += '--offline' }
     Invoke-ProbeStep -Name 'demo' -CargoArguments $runArguments
@@ -45,7 +48,7 @@ try {
     $files = @('Cargo.toml', 'Cargo.lock', '.gitignore', 'verify.ps1', 'README.md', 'MECHANISM.md')
     $files += @(Get-ChildItem -LiteralPath '.github' -Recurse -File |
         ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
-    $files += @(Get-ChildItem -LiteralPath 'macros','runtime','demo' -Recurse -File |
+    $files += @(Get-ChildItem -LiteralPath 'macros','runtime','demo','web' -Recurse -File |
         ForEach-Object { [IO.Path]::GetRelativePath($PSScriptRoot, $_.FullName) })
     $manifest = foreach ($file in $files) {
         [pscustomobject]@{

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ggpui Signal Canvas Probe</title>
+    <style>
+      :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #020617; }
+      main { display: grid; gap: 14px; justify-items: center; }
+      canvas { width: min(960px, 96vw); height: auto; border: 1px solid #334155; border-radius: 14px; box-shadow: 0 20px 60px #0008; }
+      p { color: #94a3b8; margin: 0; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Rust/WASM canvas example · click one card and observe its height, color and relayout counters</p>
+    </main>
+    <script type="module">
+      import init from "./pkg/probe_web.js";
+      init();
+    </script>
+  </body>
+</html>

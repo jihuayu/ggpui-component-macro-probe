@@ -1,5 +1,5 @@
 [workspace]
-members = ["macros", "runtime", "demo"]
+members = ["macros", "runtime", "demo", "web"]
 resolver = "2"
 
 [workspace.package]

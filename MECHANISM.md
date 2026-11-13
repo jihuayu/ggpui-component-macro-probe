@@ -83,6 +83,12 @@ runtime 对每个 Signal 保留 owner scope。`Engine::locate(signal)` 返回 ru
 
 这个原型的布局节点用 `Rect` 回调驱动 Taffy leaf，已经验证持久节点和计算缓存的接入，但未接入 Taffy 父子树、文本测量、真实 measure callback 或 GPU。生产实现可把 `LayoutNodeId` 扩展为持久父子树，并把 `DependencyLocation` 扩展为 dirty reason、layout boundary 和 measure cache 命中信息。
 
+## 浏览器 Canvas 适配器
+
+`web` crate 提供一个不改变 runtime 语义的 Rust/WASM 适配器。启动时它创建三个 `Signal<bool>`、三个 `View::layout` watcher 和对应的持久 Taffy leaf；Canvas click 事件只写入命中的 Signal，然后调用一次 `Engine::flush()`。runtime 根据 Signal 依赖定位并重跑对应 watcher，更新相同的 `LayoutNodeId` / Taffy `NodeId`，适配器再读取 `Engine::layout()` 绘制颜色、高度和边框。
+
+这个例子刻意区分两层更新：布局计算已经是 Signal 驱动的局部 relayout，但当前 Canvas 适配器为了保持实现简单会在 flush 后重绘整张画布。它没有实现 GPU damage rect、Canvas dirty region、批量实例上传或 120Hz 动画调度，因此不能把示例的完整画布重绘性能当成局部 GPU 上传性能证据。浏览器交互和 WASM 编译由 `web/README.md` 中的命令及 CI wasm 检查覆盖。
+
 ## 生命周期和提交顺序
 
 | 更新 | 行为 |

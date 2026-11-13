@@ -1,4 +1,5 @@
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.03s
+   Compiling probe-demo v0.1.0 (D:\oss\ggpui-component-macro-probe\demo)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.15s
      Running `target\debug\examples\patterns.exe`
 
 1. let chain + native match selection

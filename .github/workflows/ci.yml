@@ -24,6 +24,7 @@ jobs:
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: ${{ matrix.rust }}
+          targets: wasm32-unknown-unknown
       - name: Cache Cargo
         uses: actions/cache@v4
         with:
@@ -40,3 +41,5 @@ jobs:
           # host Cargo artifact naming. Compile-fail doctests still run here.
           PROBE_SKIP_EXTERNAL_DIAGNOSTICS: '1'
         run: cargo test --workspace --locked
+      - name: Check WebAssembly example
+        run: cargo check -p probe-web --target wasm32-unknown-unknown --locked

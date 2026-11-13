@@ -10,6 +10,30 @@
 
 当前 runtime 已接入持久的 Taffy 0.15 `TaffyTree<()>`。每个逻辑布局节点同时保存稳定的 `LayoutNodeId` 和 Taffy `NodeId`；Signal 更新会更新节点 style、执行 Taffy `compute_layout` 并回写 Rect，relayout 不会重新创建节点。卸载会从 Taffy 树移除节点。CI 位于 [.github/workflows/ci.yml](.github/workflows/ci.yml)，在 Linux 上运行 stable 与 Rust 1.88 两个工具链矩阵，并执行同一份 `verify.ps1 -Offline`。
 
+## 浏览器 Canvas example
+
+`web` crate 是一个独立的 Rust/WASM Canvas 适配示例。它把三个 `Signal<bool>` 接到持久 Taffy 布局叶节点，点击卡片后只重跑对应的 layout watcher；Canvas 适配层随后重绘画布，并在画面底部显示 Signal 写入、布局 watcher 和 relayout 计数。卡片底部同时显示稳定的逻辑 `LayoutNodeId` 与 Taffy `NodeId`。
+
+从仓库根目录构建并启动静态服务器：
+
+```powershell
+$probeCargo = (rustup which cargo).Trim()
+& $probeCargo build -p probe-web --target wasm32-unknown-unknown --release --locked
+wasm-bindgen target/wasm32-unknown-unknown/release/probe_web.wasm `
+  --target web `
+  --out-dir web/pkg `
+  --no-typescript
+python -m http.server 8080 --directory web
+```
+
+打开 <http://127.0.0.1:8080/>，点击任意卡片即可观察局部布局更新。先安装一次与 `Cargo.lock` 对齐的 `wasm-bindgen-cli`：
+
+```powershell
+cargo install wasm-bindgen-cli --version 0.2.130
+```
+
+`web/pkg` 是生成产物并被 `.gitignore` 忽略。这个示例验证的是 runtime 的 Signal 定位、持久 Taffy 节点和局部 relayout；Canvas 目前仍整画布重绘，尚未实现 GPU damage rect 或局部 Canvas dirty region。
+
 ## 运行
 
 在 PowerShell 中：
