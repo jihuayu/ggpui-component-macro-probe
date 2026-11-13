@@ -13,7 +13,13 @@ fn find_library(root: &std::path::Path) -> Option<PathBuf> {
                 continue;
             }
             let name = path.file_name()?.to_string_lossy();
-            if name.starts_with("libprobe_ui-") && name.ends_with(".rlib") {
+            if path
+                .parent()
+                .and_then(|parent| parent.file_name())
+                .is_some_and(|name| name == "deps")
+                && name.starts_with("libprobe_ui-")
+                && name.ends_with(".rlib")
+            {
                 return Some(path);
             }
         }
@@ -36,7 +42,8 @@ fn invalid_programs_have_the_expected_diagnostic() {
         .unwrap_or_else(|| deps.clone());
     let library =
         find_library(&target).expect("Cargo must build probe-ui before its integration tests");
-    let output = deps.parent().unwrap().join("pattern-diagnostics");
+    let dependency_dir = library.parent().expect("probe-ui library directory");
+    let output = dependency_dir.parent().unwrap().join("pattern-diagnostics");
     fs::create_dir_all(&output).unwrap();
     let fixtures = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/ui");
     let mut cases: Vec<_> = fs::read_dir(fixtures)
@@ -66,7 +73,7 @@ fn invalid_programs_have_the_expected_diagnostic() {
             .arg("--extern")
             .arg(format!("probe_ui={}", library.display()))
             .arg("-L")
-            .arg(format!("dependency={}", deps.display()))
+            .arg(format!("dependency={}", dependency_dir.display()))
             .arg("--out-dir")
             .arg(&output)
             .env("CARGO_MANIFEST_DIR", env!("CARGO_MANIFEST_DIR"))
