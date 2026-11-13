@@ -2,6 +2,25 @@
 //! No snapshot library or network access is needed. rustc writes only to target/.
 use std::{fs, path::PathBuf, process::Command};
 
+fn find_library(root: &std::path::Path) -> Option<PathBuf> {
+    let mut pending = vec![root.to_owned()];
+    while let Some(directory) = pending.pop() {
+        let entries = fs::read_dir(directory).ok()?;
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.is_dir() {
+                pending.push(path);
+                continue;
+            }
+            let name = path.file_name()?.to_string_lossy();
+            if name.starts_with("libprobe_ui-") && name.ends_with(".rlib") {
+                return Some(path);
+            }
+        }
+    }
+    None
+}
+
 #[test]
 fn invalid_programs_have_the_expected_diagnostic() {
     let deps = std::env::current_exe()
@@ -9,15 +28,14 @@ fn invalid_programs_have_the_expected_diagnostic() {
         .parent()
         .unwrap()
         .to_owned();
-    let library = fs::read_dir(&deps)
+    let target = std::env::current_exe()
         .unwrap()
-        .map(|entry| entry.unwrap().path())
-        .filter(|path| {
-            let name = path.file_name().unwrap().to_string_lossy();
-            name.starts_with("libprobe_ui-") && name.ends_with(".rlib")
-        })
-        .max_by_key(|path| fs::metadata(path).unwrap().modified().unwrap())
-        .expect("Cargo must build probe-ui before its integration tests");
+        .ancestors()
+        .find(|path| path.file_name().is_some_and(|name| name == "target"))
+        .map(PathBuf::from)
+        .unwrap_or_else(|| deps.clone());
+    let library =
+        find_library(&target).expect("Cargo must build probe-ui before its integration tests");
     let output = deps.parent().unwrap().join("pattern-diagnostics");
     fs::create_dir_all(&output).unwrap();
     let fixtures = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("tests/ui");
