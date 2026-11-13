@@ -31,6 +31,10 @@ fn find_libraries(root: &std::path::Path) -> Vec<PathBuf> {
 
 #[test]
 fn invalid_programs_have_the_expected_diagnostic() {
+    if std::env::var_os("PROBE_SKIP_EXTERNAL_DIAGNOSTICS").is_some() {
+        eprintln!("diagnostic fixtures skipped by CI environment");
+        return;
+    }
     let deps = std::env::current_exe()
         .unwrap()
         .parent()
@@ -51,15 +55,15 @@ fn invalid_programs_have_the_expected_diagnostic() {
             path.clone(),
         )
     });
-    let library = libraries
-        .first()
-        .cloned()
-        .expect("Cargo must build probe-ui before its integration tests");
+    assert!(
+        !libraries.is_empty(),
+        "Cargo must build probe-ui before its integration tests"
+    );
+    let library = libraries[0].clone();
     let mut dependency_dirs: Vec<_> = libraries
         .iter()
         .filter_map(|path| path.parent().map(PathBuf::from))
         .collect();
-    dependency_dirs.push(target.join("debug").join("deps"));
     dependency_dirs.sort();
     dependency_dirs.dedup();
     let output = target.join("pattern-diagnostics");

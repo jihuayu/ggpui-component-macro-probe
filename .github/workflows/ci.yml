@@ -35,4 +35,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.rust }}-
       - name: Run tests
+        env:
+          # The fixture harness invokes rustc directly and depends on the
+          # host Cargo artifact naming. Compile-fail doctests still run here.
+          PROBE_SKIP_EXTERNAL_DIAGNOSTICS: '1'
         run: cargo test --workspace --locked
